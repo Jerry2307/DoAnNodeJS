@@ -15,7 +15,7 @@ var sanphamSchema = mongoose.Schema({
         required:[true,"Vui lòng nhập giá sản phẩm,"],
         maxLength:[10,"Nhập vừa thôi"]
     },
-    rating:{
+    ratings:{
         type:Number,
         default:0
     },
@@ -39,7 +39,7 @@ var sanphamSchema = mongoose.Schema({
         type:Number,
         required:[true,"Vui lòng nhập số lượng tồn"],
         maxLength:[4,"Nhập không vượt quá 4 ký tự"],
-        default:1
+        default:1,
     },
     status:{
         type:String,
@@ -51,7 +51,12 @@ var sanphamSchema = mongoose.Schema({
     },
     danhgia:[
         {
-            ten:{
+            taikhoan:{
+                type:mongoose.Schema.ObjectId,
+                ref:"TaiKhoan",
+                required: true,
+            },
+            tennguoidung:{
                 type:String,
                 required:true,
             },
@@ -65,6 +70,11 @@ var sanphamSchema = mongoose.Schema({
             }
         }
     ],
+    taikhoan:{
+        type:mongoose.Schema.ObjectId,
+        ref:"TaiKhoan",
+        required: true,
+    },
     createAt:{
         type:Date,
         default:Date.now

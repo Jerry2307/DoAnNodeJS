@@ -5,10 +5,17 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mongoose = require('mongoose');
 var errorMiddleware = require('./middleware/error');
+var colors = require('colors');
+var config = require('./configs/config');
+var cors = require('cors');
+
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var sanphamRouter = require('./routes/sanpham');
+var taikhoanRouter = require('./routes/taikhoan');
+var orderRouter = require('./routes/order');
+
 
 
 var app = express();
@@ -23,12 +30,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-//Route Imports
-
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/api/v1',sanphamRouter);
-
+app.use('/api/v1',taikhoanRouter);
+app.use('/api/v1',orderRouter);
+app.use(cors());
 //Middleware for Errors
 app.use(errorMiddleware);
 
@@ -48,17 +55,14 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-
 // kết nối MongoDB
-mongoose.connect('mongodb://127.0.0.1:27017/DoAnNodeJS');
-ConnectMongo();
-function ConnectMongo() {
- mongoose.connection.once('open', function () {
-   console.log('connected');
- }).on('error', function (error) {
-   console.log(error);
- });
-}
+mongoose.connect(config.databaseURL+config.databaseName);
+mongoose.connection.once('open',()=>{
+  console.log("connected".magenta);
+}).on('error',(error)=>{
+  console.log(error+"".red);
+})
+
 
 
 
